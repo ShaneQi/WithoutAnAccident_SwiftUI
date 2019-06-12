@@ -13,10 +13,9 @@ struct Journey: Hashable, Identifiable {
 	let title: String
 	let days: Int
 	let button: String
-
 }
 
-struct ContentView : View {
+struct ContentView: View {
 
 	var journeys: [Journey]
 
@@ -32,13 +31,18 @@ struct ContentView : View {
 					Button(action: {}, label: { Text(journey.button) })
 				}
 				}.navigationBarTitle(Text("Journeys"))
-				.navigationBarItems(trailing: Image(systemName: "plus.circle.fill"))
+				.navigationBarItems(
+					trailing: Button(
+						action: {},
+						label: {
+							Image(systemName: "plus.circle.fill")
+					}))
 		}
 	}
 }
 
 #if DEBUG
-struct ContentView_Previews : PreviewProvider {
+struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
 		ContentView(journeys: [
 			Journey(title: "Luna", days: 39, button: "💩"),
