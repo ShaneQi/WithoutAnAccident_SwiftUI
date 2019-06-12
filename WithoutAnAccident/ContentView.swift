@@ -8,16 +8,42 @@
 
 import SwiftUI
 
+struct Journey: Hashable, Identifiable {
+	var id: String { return title }
+	let title: String
+	let days: Int
+	let button: String
+
+}
+
 struct ContentView : View {
-    var body: some View {
-        Text("Hello World")
-    }
+
+	var journeys: [Journey]
+
+	var body: some View {
+		NavigationView {
+			List(journeys) { journey in
+				HStack(alignment: .center) {
+					VStack(alignment: .leading) {
+						Text(journey.title).font(.title)
+						Text("\(journey.days) days without an accident").font(.body)
+					}
+					Spacer()
+					Button(action: {}, label: { Text(journey.button) })
+				}
+				}.navigationBarTitle(Text("Journeys"))
+				.navigationBarItems(trailing: Image(systemName: "plus.circle.fill"))
+		}
+	}
 }
 
 #if DEBUG
 struct ContentView_Previews : PreviewProvider {
     static var previews: some View {
-        ContentView()
+		ContentView(journeys: [
+			Journey(title: "Luna", days: 39, button: "💩"),
+			Journey(title: "Diva", days: 32, button: "🐱")
+			])
     }
 }
 #endif
