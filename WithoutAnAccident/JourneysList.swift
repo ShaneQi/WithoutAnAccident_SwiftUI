@@ -25,11 +25,11 @@ struct JourneysList: View {
 				HStack(alignment: .center) {
 					VStack(alignment: .leading) {
 						Text(journey.title).font(.title)
-						Text("\(journey.days) days without an accident").font(.body)
+						Text("\(journey.days) days without an accident").font(.body).lineLimit(nil)
 					}
 					Spacer()
 					Button(action: {}, label: { Text(journey.button) })
-				}
+					}.padding(12)
 				}.navigationBarTitle(Text("Journeys"))
 				.navigationBarItems(
 					trailing: Button(
