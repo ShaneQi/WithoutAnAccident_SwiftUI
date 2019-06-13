@@ -15,7 +15,7 @@ struct Journey: Hashable, Identifiable {
 	let button: String
 }
 
-struct ContentView: View {
+struct JourneysList: View {
 
 	var journeys: [Journey]
 
@@ -44,7 +44,7 @@ struct ContentView: View {
 #if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-		ContentView(journeys: [
+		JourneysList(journeys: [
 			Journey(title: "Luna", days: 39, button: "💩"),
 			Journey(title: "Diva", days: 32, button: "🐱")
 			])
