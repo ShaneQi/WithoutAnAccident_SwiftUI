@@ -10,43 +10,98 @@ import SwiftUI
 
 struct Journey: Hashable, Identifiable {
 	var id: String { return title }
-	let title: String
+	var title: String
+    var since: Date
 	let days: Int
-	let button: String
+	var button: String
+    var accidents: [Accident]
+}
+
+struct Accident: Hashable, Identifiable {
+    let id: String = UUID().uuidString
+    var date: Date
+}
+
+extension Int: Identifiable {
+    
+    public var id: Int { return self }
+    
+}
+
+private enum Destination {
+    
+    case viewJourney
+    case createJourney
+    case addAccident
+    
 }
 
 struct JourneysList: View {
 
-	var journeys: [Journey]
+	@State var journeys: [Journey]
+    @State var selectedJourneyIndex: Int?
+    @State var isEditing = false
+    @State private var destination: Destination?
 
-	var body: some View {
-		NavigationView {
-			List(journeys) { journey in
-				HStack(alignment: .center) {
-					VStack(alignment: .leading) {
-						Text(journey.title).font(.title)
-						Text("\(journey.days) days without an accident").font(.body).lineLimit(nil)
-					}
-					Spacer()
-					Button(action: {}, label: { Text(journey.button) })
-					}.padding(12)
-				}.navigationBarTitle(Text("Journeys"))
-				.navigationBarItems(
-					trailing: Button(
-						action: {},
-						label: {
-							Image(systemName: "plus.circle.fill")
-					}))
-		}
-	}
+    var body: some View {
+        let journeys = self.journeys.enumerated().map({ $0 })
+        return NavigationView {
+            List(journeys, id: \.element.id) { index, journey in
+                Button(action: {
+                    self.selectedJourneyIndex = index
+                    self.destination = .viewJourney
+                }, label: {
+                    HStack(alignment: .center) {
+                        if self.isEditing {
+                            Button(action: {
+                                self.journeys.removeAll(where: { $0 == journey })
+                            }, label: { Image(systemName: "trash.fill") })
+                        }
+                        VStack(alignment: .leading) {
+                            Text(journey.title).font(.title)
+                            Text("\(journey.days) days without an accident").font(.body).lineLimit(nil)
+                        }
+                        Spacer()
+                        Button(action: {
+                            self.selectedJourneyIndex = index
+                            self.destination = .addAccident
+                        }, label: { Text(journey.button) })
+                    }.padding(12)
+                })
+            }
+            .navigationBarTitle(Text("Journeys"))
+            .navigationBarItems(
+                leading: Button(
+                    action: {
+                        self.isEditing.toggle()
+                },
+                    label: { Text(self.isEditing ? "Done" : "Edit") }),
+                trailing: Button(
+                    action: {
+                        self.journeys.append(Journey(title: "Untitled", since: Date(), days: 0, button: "uh-oh", accidents: []))
+                        self.selectedJourneyIndex = journeys.count
+                        self.destination = .createJourney
+                },
+                    label: { Image(systemName: "plus.circle.fill") }))
+        }
+        .sheet(item: $selectedJourneyIndex, content: { index in
+            if self.destination == .viewJourney {
+                JourneyView(isEditing: false, journey: self.$journeys[index])
+            } else if self.destination == .createJourney {
+                JourneyView(isEditing: true, journey: self.$journeys[index])
+            } else {
+                AccidentView(accident: Accident(date: Date()), journey: self.$journeys[index])
+            }
+        })
+    }
 }
 
 #if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
 		JourneysList(journeys: [
-			Journey(title: "Luna", days: 39, button: "💩"),
-			Journey(title: "Diva", days: 32, button: "🐱")
+//			Journey(title: "Luna", days: 39, button: "💩"),
+//			Journey(title: "Diva", days: 32, button: "🐱")
 			])
     }
 }
