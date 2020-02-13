@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="true" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19D76" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
+    <entity name="Accident" representedClassName="Accident" syncable="YES">
+        <attribute name="happenedAt" attributeType="Date" defaultDateTimeInterval="-286304400" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" defaultValueString="00000000-0000-0000-0000-000000000000" usesScalarValueType="NO"/>
+        <attribute name="text" attributeType="String" defaultValueString=""/>
+        <relationship name="journey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Journey" inverseName="accidents" inverseEntity="Journey"/>
+    </entity>
+    <entity name="Journey" representedClassName="Journey" syncable="YES">
+        <attribute name="action" attributeType="String" defaultValueString="Uh-Oh"/>
+        <attribute name="id" attributeType="UUID" defaultValueString="00000000-0000-0000-0000-000000000000" usesScalarValueType="NO"/>
+        <attribute name="since" attributeType="Date" defaultDateTimeInterval="-286304400" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String" defaultValueString=""/>
+        <relationship name="accidents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Accident" inverseName="journey" inverseEntity="Accident"/>
+    </entity>
+    <elements>
+        <element name="Accident" positionX="-45" positionY="0" width="128" height="103"/>
+        <element name="Journey" positionX="-18" positionY="54" width="128" height="118"/>
+    </elements>
 </model>

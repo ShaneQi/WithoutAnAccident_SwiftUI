@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19D76" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Accident" representedClassName="Accident" syncable="YES" codeGenerationType="class">
+        <attribute name="happenedAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="text" attributeType="String" defaultValueString=""/>
+        <relationship name="journey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Journey" inverseName="accidents" inverseEntity="Journey"/>
+    </entity>
+    <entity name="Journey" representedClassName="Journey" syncable="YES" codeGenerationType="class">
+        <attribute name="action" attributeType="String" defaultValueString=""/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="since" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="title" attributeType="String" defaultValueString=""/>
+        <relationship name="accidents" toMany="YES" deletionRule="Cascade" destinationEntity="Accident" inverseName="journey" inverseEntity="Accident"/>
+    </entity>
+    <elements>
+        <element name="Journey" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="Accident" positionX="-54" positionY="18" width="128" height="103"/>
+    </elements>
+</model>

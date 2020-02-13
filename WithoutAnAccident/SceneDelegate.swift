@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftUI
+import CoreData
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -36,6 +37,53 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.window = window
             window.makeKeyAndVisible()
         }
+        
+        let context = (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
+
+        for journey in try! context.fetch(Journey.fetchRequest()) {
+            context.delete(journey as! Journey)
+        }
+        
+        for accident in try! context.fetch(Accident.fetchRequest()) {
+            context.delete(accident as! Accident)
+        }
+        
+        let newJourney = NSEntityDescription.insertNewObject(forEntityName: "Journey", into: context) as! Journey
+        newJourney.id = UUID()
+        newJourney.since = Date()
+        newJourney.title = "Luna"
+        newJourney.action = "💩"
+
+        let newAccident = NSEntityDescription.insertNewObject(forEntityName: "Accident", into: context) as! Accident
+        newAccident.id = UUID()
+        newAccident.happenedAt = Date()
+        let newAccident1 = NSEntityDescription.insertNewObject(forEntityName: "Accident", into: context) as! Accident
+        newAccident1.id = UUID()
+        newAccident1.happenedAt = Date().addingTimeInterval(-172800)
+        let newAccident2 = NSEntityDescription.insertNewObject(forEntityName: "Accident", into: context) as! Accident
+        newAccident2.id = UUID()
+        newAccident2.happenedAt = Date().addingTimeInterval(-172800 * 2)
+        
+        newJourney.addAccidents([newAccident, newAccident1, newAccident2])
+        
+        let newJourney1 = NSEntityDescription.insertNewObject(forEntityName: "Journey", into: context) as! Journey
+        newJourney1.id = UUID()
+        newJourney1.since = Date()
+        newJourney1.title = "Diva"
+
+        let newAccident10 = NSEntityDescription.insertNewObject(forEntityName: "Accident", into: context) as! Accident
+        newAccident10.id = UUID()
+        newAccident10.happenedAt = Date().addingTimeInterval(-172800 * 3)
+        let newAccident11 = NSEntityDescription.insertNewObject(forEntityName: "Accident", into: context) as! Accident
+        newAccident11.id = UUID()
+        newAccident11.happenedAt = Date().addingTimeInterval(-172800 * 4)
+        let newAccident12 = NSEntityDescription.insertNewObject(forEntityName: "Accident", into: context) as! Accident
+        newAccident12.id = UUID()
+        newAccident12.happenedAt = Date().addingTimeInterval(-172800 * 5)
+        
+        newJourney.addAccidents([newAccident10, newAccident11, newAccident12])
+        
+        try! context.save()
 	}
 
 	func sceneDidDisconnect(_ scene: UIScene) {
@@ -66,7 +114,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		// to restore the scene back to its current state.
 
 		// Save changes in the application's managed object context when the application transitions to the background.
-		(UIApplication.shared.delegate as? AppDelegate)?.saveContext()
 	}
 
 

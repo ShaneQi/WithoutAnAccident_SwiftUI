@@ -18,6 +18,8 @@
 		3485528D22B0B9C200754198 /* WithoutAnAccidentUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3485528C22B0B9C200754198 /* WithoutAnAccidentUITests.swift */; };
 		34870E3B22B1624A00130196 /* JourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34870E3A22B1624A00130196 /* JourneyView.swift */; };
 		7295900023F4A76600ED97CA /* AccidentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72958FFF23F4A76600ED97CA /* AccidentView.swift */; };
+		7295901423F50C4F00ED97CA /* Accident+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7295901023F50C4F00ED97CA /* Accident+CoreDataClass.swift */; };
+		7295901623F50C4F00ED97CA /* Journey+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7295901223F50C4F00ED97CA /* Journey+CoreDataClass.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		3485528E22B0B9C200754198 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		34870E3A22B1624A00130196 /* JourneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyView.swift; sourceTree = "<group>"; };
 		72958FFF23F4A76600ED97CA /* AccidentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccidentView.swift; sourceTree = "<group>"; };
+		7295901023F50C4F00ED97CA /* Accident+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Accident+CoreDataClass.swift"; sourceTree = "<group>"; };
+		7295901223F50C4F00ED97CA /* Journey+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Journey+CoreDataClass.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +109,8 @@
 		3485526622B0B9BE00754198 /* WithoutAnAccident */ = {
 			isa = PBXGroup;
 			children = (
+				7295901023F50C4F00ED97CA /* Accident+CoreDataClass.swift */,
+				7295901223F50C4F00ED97CA /* Journey+CoreDataClass.swift */,
 				3485526722B0B9BE00754198 /* AppDelegate.swift */,
 				3485526922B0B9BE00754198 /* SceneDelegate.swift */,
 				3485526E22B0B9BE00754198 /* JourneysList.swift */,
@@ -279,6 +285,8 @@
 				3485526D22B0B9BE00754198 /* WithoutAnAccident.xcdatamodeld in Sources */,
 				3485526822B0B9BE00754198 /* AppDelegate.swift in Sources */,
 				34870E3B22B1624A00130196 /* JourneyView.swift in Sources */,
+				7295901423F50C4F00ED97CA /* Accident+CoreDataClass.swift in Sources */,
+				7295901623F50C4F00ED97CA /* Journey+CoreDataClass.swift in Sources */,
 				3485526F22B0B9BE00754198 /* JourneysList.swift in Sources */,
 				3485526A22B0B9BE00754198 /* SceneDelegate.swift in Sources */,
 				7295900023F4A76600ED97CA /* AccidentView.swift in Sources */,
