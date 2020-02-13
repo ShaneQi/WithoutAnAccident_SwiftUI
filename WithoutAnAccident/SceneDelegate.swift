@@ -20,6 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		// If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
 		// This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
+        let context = (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
+        
 		// Use a UIHostingController as window root view controller
         
         
@@ -33,12 +35,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 ]),
                 JourneyX(title: "Diva", since: Date().addingTimeInterval(-87000), days: 32, button: "🐱", accidents: [
                 ])
-            ]))
+            ]).environment(\.managedObjectContext, context))
             self.window = window
             window.makeKeyAndVisible()
         }
         
-        let context = (UIApplication.shared.delegate as? AppDelegate)!.persistentContainer.viewContext
+        
 
         for journey in try! context.fetch(Journey.fetchRequest()) {
             context.delete(journey as! Journey)

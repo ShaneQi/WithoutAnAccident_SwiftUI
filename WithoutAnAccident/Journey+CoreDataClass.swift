@@ -18,7 +18,11 @@ public class Journey: NSManagedObject {
 extension Journey {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Journey> {
-        return NSFetchRequest<Journey>(entityName: "Journey")
+        let request = NSFetchRequest<Journey>(entityName: "Journey")
+        request.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Journey.title, ascending: true)
+        ]
+        return request
     }
 
     @NSManaged public var action: String

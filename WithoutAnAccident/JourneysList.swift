@@ -42,30 +42,35 @@ struct JourneysList: View {
     @State var selectedJourneyIndex: Int?
     @State var isEditing = false
     @State private var destination: Destination?
+    
+    @Environment(\.managedObjectContext) var managedObjectContext
+    @FetchRequest(fetchRequest: Journey.fetchRequest()) var journeysX: FetchedResults<Journey>
+
 
     var body: some View {
-        let journeys = self.journeys.enumerated().map({ $0 })
+//        let journeys = self.journeysX.enumerated().map({ $0 })
         return NavigationView {
-            List(journeys, id: \.element.id) { index, journey in
+            List(journeysX, id: \.self) { journey in
                 Button(action: {
-                    self.selectedJourneyIndex = index
-                    self.destination = .viewJourney
+//                    self.selectedJourneyIndex = index
+//                    self.destination = .viewJourney
                 }, label: {
                     HStack(alignment: .center) {
                         if self.isEditing {
                             Button(action: {
-                                self.journeys.removeAll(where: { $0 == journey })
+//                                self.journeys.removeAll(where: { $0 == journey })
                             }, label: { Image(systemName: "trash.fill") })
                         }
                         VStack(alignment: .leading) {
                             Text(journey.title).font(.title)
-                            Text("\(journey.days) days without an accident").font(.body).lineLimit(nil)
+//                            Text("\(journey.days) days without an accident").font(.body).lineLimit(nil)
+                            Text("0 days without an accident").font(.body).lineLimit(nil)
                         }
                         Spacer()
                         Button(action: {
-                            self.selectedJourneyIndex = index
-                            self.destination = .addAccident
-                        }, label: { Text(journey.button) })
+//                            self.selectedJourneyIndex = index
+//                            self.destination = .addAccident
+                        }, label: { Text(journey.action) })
                     }.padding(12)
                 })
             }
@@ -79,7 +84,7 @@ struct JourneysList: View {
                 trailing: Button(
                     action: {
                         self.journeys.append(JourneyX(title: "Untitled", since: Date(), days: 0, button: "uh-oh", accidents: []))
-                        self.selectedJourneyIndex = journeys.count
+                        self.selectedJourneyIndex = self.journeys.count
                         self.destination = .createJourney
                 },
                     label: { Image(systemName: "plus.circle.fill") }))
