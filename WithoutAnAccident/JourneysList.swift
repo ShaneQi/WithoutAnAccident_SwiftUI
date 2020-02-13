@@ -49,12 +49,11 @@ struct JourneysList: View {
 
 
     var body: some View {
-//        let journeys = self.journeysX.enumerated().map({ $0 })
         return NavigationView {
             List(journeysX, id: \.self) { journey in
                 Button(action: {
-//                    self.selectedJourneyIndex = index
-//                    self.destination = .viewJourney
+                    self.selectedJourney = journey
+                    self.destination = .viewJourney
                 }, label: {
                     HStack(alignment: .center) {
                         if self.isEditing {
@@ -91,14 +90,15 @@ struct JourneysList: View {
                     label: { Image(systemName: "plus.circle.fill") }))
         }
         .sheet(item: $selectedJourney, content: { journey in
-//            if self.destination == .viewJourney {
-//                JourneyView(isEditing: false, journey: self.$journeys[index])
+            if self.destination == .viewJourney {
+                JourneyView(isEditing: false, journey: journey)
+                    .environment(\.managedObjectContext, self.managedObjectContext)
 //            } else if self.destination == .createJourney {
 //                JourneyView(isEditing: true, journey: self.$journeys[index])
-//            } else {
+            } else {
                 AccidentView(journey: journey)
                     .environment(\.managedObjectContext, self.managedObjectContext)
-//            }
+            }
         })
     }
 }
