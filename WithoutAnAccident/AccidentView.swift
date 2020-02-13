@@ -10,8 +10,8 @@ import SwiftUI
 
 struct AccidentView: View {
     
-    @State var accident = Accident(date: Date())
-    @Binding var journey: Journey
+    @State var accident = AccidentX(date: Date())
+    @Binding var journey: JourneyX
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {

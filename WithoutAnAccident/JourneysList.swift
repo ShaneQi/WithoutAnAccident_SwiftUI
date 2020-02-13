@@ -8,16 +8,16 @@
 
 import SwiftUI
 
-struct Journey: Hashable, Identifiable {
+struct JourneyX: Hashable, Identifiable {
 	var id: String { return title }
 	var title: String
     var since: Date
 	let days: Int
 	var button: String
-    var accidents: [Accident]
+    var accidents: [AccidentX]
 }
 
-struct Accident: Hashable, Identifiable {
+struct AccidentX: Hashable, Identifiable {
     let id: String = UUID().uuidString
     var date: Date
 }
@@ -38,7 +38,7 @@ private enum Destination {
 
 struct JourneysList: View {
 
-	@State var journeys: [Journey]
+	@State var journeys: [JourneyX]
     @State var selectedJourneyIndex: Int?
     @State var isEditing = false
     @State private var destination: Destination?
@@ -78,7 +78,7 @@ struct JourneysList: View {
                     label: { Text(self.isEditing ? "Done" : "Edit") }),
                 trailing: Button(
                     action: {
-                        self.journeys.append(Journey(title: "Untitled", since: Date(), days: 0, button: "uh-oh", accidents: []))
+                        self.journeys.append(JourneyX(title: "Untitled", since: Date(), days: 0, button: "uh-oh", accidents: []))
                         self.selectedJourneyIndex = journeys.count
                         self.destination = .createJourney
                 },
@@ -90,7 +90,7 @@ struct JourneysList: View {
             } else if self.destination == .createJourney {
                 JourneyView(isEditing: true, journey: self.$journeys[index])
             } else {
-                AccidentView(accident: Accident(date: Date()), journey: self.$journeys[index])
+                AccidentView(accident: AccidentX(date: Date()), journey: self.$journeys[index])
             }
         })
     }

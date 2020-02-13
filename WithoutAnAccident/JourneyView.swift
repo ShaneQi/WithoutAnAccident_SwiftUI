@@ -13,8 +13,8 @@ struct JourneyView: View {
     @State var isEditing: Bool
 	@State var date: Date = Date()
 	@State var title: String = ""
-    @Binding var journey: Journey
-    @State var newAccident: Accident?
+    @Binding var journey: JourneyX
+    @State var newAccident: AccidentX?
     
 	var body: some View {
         NavigationView {
@@ -44,7 +44,7 @@ struct JourneyView: View {
                 Section(header: HStack {
                     Text("ACCIDENTS:")
                     Spacer()
-                    Button(action: { self.newAccident = Accident(date: Date()) }, label: { Text("ADD") })
+                    Button(action: { self.newAccident = AccidentX(date: Date()) }, label: { Text("ADD") })
                 }) {
                     ForEach(journey.accidents) { accident in
                         HStack {

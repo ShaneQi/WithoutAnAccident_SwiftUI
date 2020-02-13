@@ -25,12 +25,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             window.rootViewController = UIHostingController(rootView: JourneysList(journeys: [
-                Journey(title: "Luna", since: Date().addingTimeInterval(-687000) ,days: 39, button: "💩", accidents: [
-                    Accident(date: Date().addingTimeInterval(-3600)),
-                    Accident(date: Date().addingTimeInterval(-7200)),
-                    Accident(date: Date().addingTimeInterval(-10800))
+                JourneyX(title: "Luna", since: Date().addingTimeInterval(-687000) ,days: 39, button: "💩", accidents: [
+                    AccidentX(date: Date().addingTimeInterval(-3600)),
+                    AccidentX(date: Date().addingTimeInterval(-7200)),
+                    AccidentX(date: Date().addingTimeInterval(-10800))
                 ]),
-                Journey(title: "Diva", since: Date().addingTimeInterval(-87000), days: 32, button: "🐱", accidents: [
+                JourneyX(title: "Diva", since: Date().addingTimeInterval(-87000), days: 32, button: "🐱", accidents: [
                 ])
             ]))
             self.window = window
