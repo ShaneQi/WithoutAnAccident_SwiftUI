@@ -83,7 +83,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         newAccident12.id = UUID()
         newAccident12.happenedAt = Date().addingTimeInterval(-172800 * 5)
         
-        newJourney.addAccidents([newAccident10, newAccident11, newAccident12])
+        newJourney1.addAccidents([newAccident10, newAccident11, newAccident12])
         
         try! context.save()
 	}

@@ -58,12 +58,12 @@ struct JourneysList: View {
                     HStack(alignment: .center) {
                         if self.isEditing {
                             Button(action: {
-//                                self.journeys.removeAll(where: { $0 == journey })
+                                self.managedObjectContext.delete(journey)
+                                try! self.managedObjectContext.save()
                             }, label: { Image(systemName: "trash.fill") })
                         }
                         VStack(alignment: .leading) {
                             Text(journey.title).font(.title)
-//                            Text("\(journey.days) days without an accident").font(.body).lineLimit(nil)
                             Text("0 days without an accident").font(.body).lineLimit(nil)
                         }
                         Spacer()
