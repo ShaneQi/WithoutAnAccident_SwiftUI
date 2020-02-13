@@ -66,9 +66,9 @@ struct JourneyView: View {
             }, label: {
                 self.isEditing ? Text("Done") : Text("Edit")
             }))
-                .sheet(item: $newAccident, content: { _ in
-                    AccidentView(journey: self.$journey)
-                })
+//                .sheet(item: $newAccident, content: { _ in
+//                    AccidentView(journey: self.$journey)
+//                })
         }
 	}
 }

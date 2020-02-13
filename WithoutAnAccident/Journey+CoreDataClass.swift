@@ -49,3 +49,5 @@ extension Journey {
     @NSManaged public func removeAccidents(_ values: NSSet)
 
 }
+
+extension Journey: Identifiable {}

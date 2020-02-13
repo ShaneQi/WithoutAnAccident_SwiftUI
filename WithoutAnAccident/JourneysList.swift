@@ -43,6 +43,7 @@ struct JourneysList: View {
     @State var isEditing = false
     @State private var destination: Destination?
     
+    @State var selectedJourney: Journey?
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(fetchRequest: Journey.fetchRequest()) var journeysX: FetchedResults<Journey>
 
@@ -68,8 +69,8 @@ struct JourneysList: View {
                         }
                         Spacer()
                         Button(action: {
-//                            self.selectedJourneyIndex = index
-//                            self.destination = .addAccident
+                            self.selectedJourney = journey
+                            self.destination = .addAccident
                         }, label: { Text(journey.action) })
                     }.padding(12)
                 })
@@ -89,14 +90,15 @@ struct JourneysList: View {
                 },
                     label: { Image(systemName: "plus.circle.fill") }))
         }
-        .sheet(item: $selectedJourneyIndex, content: { index in
-            if self.destination == .viewJourney {
-                JourneyView(isEditing: false, journey: self.$journeys[index])
-            } else if self.destination == .createJourney {
-                JourneyView(isEditing: true, journey: self.$journeys[index])
-            } else {
-                AccidentView(accident: AccidentX(date: Date()), journey: self.$journeys[index])
-            }
+        .sheet(item: $selectedJourney, content: { journey in
+//            if self.destination == .viewJourney {
+//                JourneyView(isEditing: false, journey: self.$journeys[index])
+//            } else if self.destination == .createJourney {
+//                JourneyView(isEditing: true, journey: self.$journeys[index])
+//            } else {
+                AccidentView(journey: journey)
+                    .environment(\.managedObjectContext, self.managedObjectContext)
+//            }
         })
     }
 }

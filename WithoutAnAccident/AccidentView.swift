@@ -7,17 +7,20 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct AccidentView: View {
     
-    @State var accident = AccidentX(date: Date())
-    @Binding var journey: JourneyX
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.managedObjectContext) var managedObjectContext
+    
+    @State var happenedAt = Date()
+    @ObservedObject var journey: Journey
     
     var body: some View {
         NavigationView {
             List {
-                DatePicker(selection: $accident.date, label: { Text("Happened at:") })
+                DatePicker(selection: $happenedAt, label: { Text("Happened at:") })
             }.listStyle(GroupedListStyle())
                 .navigationBarItems(
                     leading: Button(action: {
@@ -26,7 +29,11 @@ struct AccidentView: View {
                         Text("Cancel")
                     }),
                     trailing: Button(action: {
-                        self.journey.accidents.append(self.accident)
+                        let newAccident = NSEntityDescription.insertNewObject(forEntityName: "Accident", into: self.managedObjectContext) as! Accident
+                        newAccident.id = UUID()
+                        newAccident.happenedAt = self.happenedAt
+                        self.journey.addAccident(newAccident)
+                        try! self.managedObjectContext.save()
                         self.presentationMode.wrappedValue.dismiss()
                     }, label: {
                         Text("Done")

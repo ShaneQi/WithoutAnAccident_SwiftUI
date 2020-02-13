@@ -27,3 +27,5 @@ extension Accident {
     @NSManaged public var journey: Journey
 
 }
+
+extension Accident: Identifiable {}
