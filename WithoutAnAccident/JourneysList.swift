@@ -7,26 +7,7 @@
 //
 
 import SwiftUI
-
-struct JourneyX: Hashable, Identifiable {
-	var id: String { return title }
-	var title: String
-    var since: Date
-	let days: Int
-	var button: String
-    var accidents: [AccidentX]
-}
-
-struct AccidentX: Hashable, Identifiable {
-    let id: String = UUID().uuidString
-    var date: Date
-}
-
-extension Int: Identifiable {
-    
-    public var id: Int { return self }
-    
-}
+import CoreData
 
 private enum Destination {
     
@@ -38,7 +19,6 @@ private enum Destination {
 
 struct JourneysList: View {
 
-	@State var journeys: [JourneyX]
     @State var selectedJourneyIndex: Int?
     @State var isEditing = false
     @State private var destination: Destination?
@@ -83,8 +63,10 @@ struct JourneysList: View {
                     label: { Text(self.isEditing ? "Done" : "Edit") }),
                 trailing: Button(
                     action: {
-                        self.journeys.append(JourneyX(title: "Untitled", since: Date(), days: 0, button: "uh-oh", accidents: []))
-                        self.selectedJourneyIndex = self.journeys.count
+                        let newJourney = NSEntityDescription.insertNewObject(forEntityName: "Journey", into: self.managedObjectContext) as! Journey
+                        newJourney.id = UUID()
+                        newJourney.since = Date()
+                        self.selectedJourney = newJourney
                         self.destination = .createJourney
                 },
                     label: { Image(systemName: "plus.circle.fill") }))
@@ -93,8 +75,9 @@ struct JourneysList: View {
             if self.destination == .viewJourney {
                 JourneyView(isEditing: false, journey: journey)
                     .environment(\.managedObjectContext, self.managedObjectContext)
-//            } else if self.destination == .createJourney {
-//                JourneyView(isEditing: true, journey: self.$journeys[index])
+            } else if self.destination == .createJourney {
+                JourneyView(isEditing: true, journey: journey)
+                    .environment(\.managedObjectContext, self.managedObjectContext)
             } else {
                 AccidentView(journey: journey)
                     .environment(\.managedObjectContext, self.managedObjectContext)
@@ -102,14 +85,3 @@ struct JourneysList: View {
         })
     }
 }
-
-#if DEBUG
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-		JourneysList(journeys: [
-//			Journey(title: "Luna", days: 39, button: "💩"),
-//			Journey(title: "Diva", days: 32, button: "🐱")
-			])
-    }
-}
-#endif

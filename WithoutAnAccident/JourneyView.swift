@@ -7,19 +7,33 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct JourneyView: View {
 
-    @State var isEditing: Bool
+    @State var isEditing: Bool = false
     @ObservedObject var journey: Journey
     
     // Temp values
     @State var title: String = ""
     @State var since: Date = Date()
     @State var action: String = ""
+    @State var addingAccidentToJourney: Journey?
+    
+    let isInitiallyEditing: Bool?
     
     @Environment(\.managedObjectContext) var managedObjectContext
+    var fetchedResults: FetchRequest<Accident>
     
+    init(isEditing: Bool, journey: Journey) {
+        self.isInitiallyEditing = isEditing
+        self.journey = journey
+        fetchedResults = FetchRequest(
+            entity: Accident.entity(),
+            sortDescriptors: [NSSortDescriptor(keyPath: \Accident.happenedAt, ascending: false)],
+            predicate: NSPredicate(format: "journey == %@", journey))
+    }
+
 	var body: some View {
         NavigationView {
             List {
@@ -45,24 +59,25 @@ struct JourneyView: View {
                         }
                     }
                 }
-//                Section(header: HStack {
-//                    Text("ACCIDENTS:")
-//                    Spacer()
-////                    Button(action: { self.newAccident = AccidentX(date: Date()) },
-////                           label: { Text("ADD") })
-//                }) {
-//                    ForEach(journey.accidents as! Set<Accident>, id: \Accident.id) { accident in
-//                        HStack {
-//                            Text("\(accident.date)")
-//                            if self.isEditing {
-//                                Spacer()
-//                                Button(action: {
-//                                    self.journey.accidents.removeAll(where: { $0 == accident })
-//                                }, label: { Image(systemName: "trash.fill") })
-//                            }
-//                        }
-//                    }
-//                }
+                Section(header: HStack {
+                    Text("ACCIDENTS:")
+                    Spacer()
+                    Button(action: { self.addingAccidentToJourney = self.journey },
+                           label: { Text("ADD") })
+                }) {
+                    ForEach(fetchedResults.wrappedValue, id: \Accident.id) { accident in
+                        HStack {
+                            Text("\(accident.happenedAt)")
+                            if self.isEditing {
+                                Spacer()
+                                Button(action: {
+                                    self.managedObjectContext.delete(accident)
+                                    try! self.managedObjectContext.save()
+                                }, label: { Image(systemName: "trash.fill") })
+                            }
+                        }
+                    }
+                }
             }
             .listStyle(GroupedListStyle())
             .navigationBarTitle(Text(isEditing ? "Edit Journey" : title))
@@ -87,28 +102,16 @@ struct JourneyView: View {
             }, label: {
                 self.isEditing ? Text("Done") : Text("Edit")
             }))
-//                .sheet(item: $newAccident, content: { _ in
-//                    AccidentView(journey: self.$journey)
-//                })
+                .sheet(item: $addingAccidentToJourney, content: { journey in
+                    AccidentView(journey: journey)
+                })
         }.onAppear {
+            if let isEditing = self.isInitiallyEditing {
+                self.isEditing = isEditing
+            }
             self.title = self.journey.title
             self.since = self.journey.since
             self.action = self.journey.action
         }
 	}
-}
-
-#if DEBUG
-//struct JourneyView_Previews: PreviewProvider {
-//	static var previews: some View {
-////		JourneyView(journey: Journey(title: "Luna", days: 39, button: "💩"))
-//	}
-//}
-#endif
-
-extension View {
-    func debug() -> Self {
-        print(Mirror(reflecting: self).subjectType)
-        return self
-    }
 }
