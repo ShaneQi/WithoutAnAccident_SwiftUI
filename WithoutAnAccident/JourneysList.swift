@@ -25,12 +25,26 @@ struct JourneysList: View {
 
 	@State var selectedJourney: Journey?
 	@Environment(\.managedObjectContext) var managedObjectContext
-	@FetchRequest(fetchRequest: Journey.fetchRequest()) var journeysX: FetchedResults<Journey>
+	@FetchRequest(fetchRequest: Journey.fetchRequest()) var journeys: FetchedResults<Journey>
 
+	func daysWihtoutAnAccident(journey: Journey) -> Int {
+		let lastAccidentRequest = NSFetchRequest<Accident>(entityName: "Accident")
+		lastAccidentRequest.fetchLimit = 1
+		lastAccidentRequest.predicate = NSPredicate(format: "journey == %@", journey)
+		lastAccidentRequest.sortDescriptors = [
+			NSSortDescriptor(keyPath: \Accident.happenedAt, ascending: false)
+		]
+		let lastAccident = try! managedObjectContext.fetch(lastAccidentRequest).first
+		if let lastAccident = lastAccident {
+			return Calendar.current.dateComponents([Calendar.Component.day], from: lastAccident.happenedAt, to: Date()).day!
+		} else {
+			return Calendar.current.dateComponents([Calendar.Component.day], from: journey.since, to: Date()).day!
+		}
+	}
 
 	var body: some View {
 		return NavigationView {
-			List(journeysX, id: \.self) { journey in
+			List(journeys, id: \.self) { journey in
 				Button(action: {
 					self.selectedJourney = journey
 					self.destination = .viewJourney
@@ -44,7 +58,7 @@ struct JourneysList: View {
 						}
 						VStack(alignment: .leading) {
 							Text(journey.title).font(.title)
-							Text("0 days without an accident").font(.body).lineLimit(nil)
+							Text("\(self.daysWihtoutAnAccident(journey: journey)) days without an accident").font(.body).lineLimit(nil)
 						}
 						Spacer()
 						Button(action: {

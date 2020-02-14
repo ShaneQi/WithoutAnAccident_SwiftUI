@@ -22,6 +22,7 @@ struct AccidentView: View {
 			List {
 				DatePicker(selection: $happenedAt, label: { Text("Happened at:") })
 			}.listStyle(GroupedListStyle())
+				.navigationBarTitle(Text("New Accident"))
 				.navigationBarItems(
 					leading: Button(action: {
 						self.presentationMode.wrappedValue.dismiss()
