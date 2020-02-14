@@ -17,36 +17,36 @@ public class Journey: NSManagedObject {
 
 extension Journey {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Journey> {
-        let request = NSFetchRequest<Journey>(entityName: "Journey")
-        request.sortDescriptors = [
-            NSSortDescriptor(keyPath: \Journey.title, ascending: true)
-        ]
-        return request
-    }
+	@nonobjc public class func fetchRequest() -> NSFetchRequest<Journey> {
+		let request = NSFetchRequest<Journey>(entityName: "Journey")
+		request.sortDescriptors = [
+			NSSortDescriptor(keyPath: \Journey.title, ascending: true)
+		]
+		return request
+	}
 
-    @NSManaged public var action: String
-    @NSManaged public var id: UUID
-    @NSManaged public var since: Date
-    @NSManaged public var title: String
-    @NSManaged public var accidents: NSSet?
+	@NSManaged public var action: String
+	@NSManaged public var id: UUID
+	@NSManaged public var since: Date
+	@NSManaged public var title: String
+	@NSManaged public var accidents: NSSet?
 
 }
 
 // MARK: Generated accessors for accidents
 extension Journey {
 
-    @objc(addAccidentsObject:)
-    @NSManaged public func addAccident(_ value: Accident)
+	@objc(addAccidentsObject:)
+	@NSManaged public func addAccident(_ value: Accident)
 
-    @objc(removeAccidentsObject:)
-    @NSManaged public func removeAccident(_ value: Accident)
+	@objc(removeAccidentsObject:)
+	@NSManaged public func removeAccident(_ value: Accident)
 
-    @objc(addAccidents:)
-    @NSManaged public func addAccidents(_ values: NSSet)
+	@objc(addAccidents:)
+	@NSManaged public func addAccidents(_ values: NSSet)
 
-    @objc(removeAccidents:)
-    @NSManaged public func removeAccidents(_ values: NSSet)
+	@objc(removeAccidents:)
+	@NSManaged public func removeAccidents(_ values: NSSet)
 
 }
 

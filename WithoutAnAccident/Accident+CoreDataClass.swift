@@ -17,18 +17,18 @@ public class Accident: NSManagedObject {
 
 extension Accident {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Accident> {
-        let request = NSFetchRequest<Accident>(entityName: "Accident")
-        request.sortDescriptors = [
-            NSSortDescriptor(key: "happenedAt", ascending: false)
-        ]
-        return request
-    }
+	@nonobjc public class func fetchRequest() -> NSFetchRequest<Accident> {
+		let request = NSFetchRequest<Accident>(entityName: "Accident")
+		request.sortDescriptors = [
+			NSSortDescriptor(key: "happenedAt", ascending: false)
+		]
+		return request
+	}
 
-    @NSManaged public var happenedAt: Date
-    @NSManaged public var id: UUID
-    @NSManaged public var text: String
-    @NSManaged public var journey: Journey
+	@NSManaged public var happenedAt: Date
+	@NSManaged public var id: UUID
+	@NSManaged public var text: String
+	@NSManaged public var journey: Journey
 
 }
 
