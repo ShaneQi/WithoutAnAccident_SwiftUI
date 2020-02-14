@@ -45,7 +45,7 @@ struct JourneyView: View {
 						}
 					}
 					if self.isEditing {
-						DatePicker(selection: $since, label: { Text("Start from") })
+						DatePicker(selection: $since, displayedComponents: [.date], label: { Text("Start from") }).foregroundColor(.black)
 					} else {
 						Text("Start from \(since)")
 					}

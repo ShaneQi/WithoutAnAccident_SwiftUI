@@ -54,7 +54,7 @@ struct JourneysList: View {
 							Button(action: {
 								self.managedObjectContext.delete(journey)
 								try! self.managedObjectContext.save()
-							}, label: { Image(systemName: "trash.fill") })
+							}, label: { Image(systemName: "trash.fill") }).padding([.trailing], 8)
 						}
 						VStack(alignment: .leading) {
 							Text(journey.title).font(.title)
@@ -83,7 +83,8 @@ struct JourneysList: View {
 						self.selectedJourney = newJourney
 						self.destination = .createJourney
 				},
-					label: { Image(systemName: "plus.circle.fill") }))
+					label: { Image(systemName: "plus.circle.fill") }).padding(8)
+			)
 		}
 		.sheet(item: $selectedJourney, content: { journey in
 			if self.destination == .viewJourney {

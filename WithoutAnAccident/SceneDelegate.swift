@@ -26,6 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 		if let windowScene = scene as? UIWindowScene {
 			let window = UIWindow(windowScene: windowScene)
+			window.tintColor = .orange
 			window.rootViewController = UIHostingController(rootView: JourneysList().environment(\.managedObjectContext, context))
 			self.window = window
 			window.makeKeyAndVisible()
