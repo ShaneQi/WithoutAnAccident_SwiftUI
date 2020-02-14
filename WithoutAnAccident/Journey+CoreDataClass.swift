@@ -2,7 +2,7 @@
 //  Journey+CoreDataClass.swift
 //  WithoutAnAccident
 //
-//  Created by Zengtai Qi on 2/12/20.
+//  Created by Shane Qi on 2/12/20.
 //  Copyright © 2020 Shane Qi. All rights reserved.
 //
 //

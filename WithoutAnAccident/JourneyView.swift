@@ -92,6 +92,7 @@ struct JourneyView: View {
 				}
 				}
 				,trailing: Button(action: {
+					UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 					if self.isEditing {
 						self.journey.title = self.title
 						self.journey.since = self.since
