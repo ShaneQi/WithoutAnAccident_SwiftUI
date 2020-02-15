@@ -17,10 +17,24 @@ struct AccidentView: View {
 	@State var happenedAt = Date()
 	@ObservedObject var journey: Journey
 
+	private let dateTimeFormatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.dateStyle = .medium
+		formatter.timeStyle = .short
+		return formatter
+	} ()
+
 	var body: some View {
 		NavigationView {
 			List {
-				DatePicker(selection: $happenedAt, label: { Text("Happened at:") })
+				HStack {
+					Text("Happened at:")
+					Spacer()
+					Text(dateTimeFormatter.string(from: happenedAt))
+				}
+				DatePicker(selection: $happenedAt, label: { Text("") })
+				.datePickerStyle(WheelDatePickerStyle())
+				.labelsHidden()
 			}.listStyle(GroupedListStyle())
 				.navigationBarTitle(Text("New Accident"))
 				.navigationBarItems(
