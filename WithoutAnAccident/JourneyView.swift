@@ -11,7 +11,8 @@ import CoreData
 
 struct JourneyView: View {
 	
-	@State var isEditing: Bool = false
+	@State var isEditing = false
+	@State var showDatePicker = false
 	@ObservedObject var journey: Journey
 	
 	// Temp values
@@ -21,9 +22,24 @@ struct JourneyView: View {
 	@State var addingAccidentToJourney: Journey?
 	
 	let isInitiallyEditing: Bool?
-	
+
+	@Environment(\.presentationMode) var presentationMode
 	@Environment(\.managedObjectContext) var managedObjectContext
 	var fetchedResults: FetchRequest<Accident>
+
+	private let dateFormatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.dateStyle = .medium
+		formatter.timeStyle = .none
+		return formatter
+	} ()
+
+	private let dateTimeFormatter: DateFormatter = {
+		let formatter = DateFormatter()
+		formatter.dateStyle = .medium
+		formatter.timeStyle = .short
+		return formatter
+	} ()
 	
 	init(isEditing: Bool, journey: Journey) {
 		self.isInitiallyEditing = isEditing
@@ -41,18 +57,39 @@ struct JourneyView: View {
 					if self.isEditing {
 						HStack {
 							Text("Title")
-							TextField("Enter Title", text: $title).multilineTextAlignment(.trailing)
+							TextField("Enter Title", text: $title)
+								.multilineTextAlignment(.trailing)
+								.foregroundColor(.orange)
 						}
 					}
 					if self.isEditing {
-						DatePicker(selection: $since, displayedComponents: [.date], label: { Text("Start from") }).foregroundColor(.black)
+						Button(action: {
+							self.showDatePicker.toggle()
+						}, label: {
+							HStack{
+								Text("Start from").foregroundColor(.black)
+								Spacer()
+								Text(self.dateFormatter.string(from: since)).foregroundColor(.orange)
+							}
+						})
+						if self.showDatePicker {
+							DatePicker(selection: $since, displayedComponents: [.date], label: { Text("") })
+								.datePickerStyle(WheelDatePickerStyle())
+								.labelsHidden()
+						}
 					} else {
-						Text("Start from \(since)")
+						HStack{
+							Text("Start from")
+							Spacer()
+							Text(self.dateFormatter.string(from: self.journey.since))
+						}
 					}
 					HStack {
 						Text("Action")
 						if self.isEditing {
-							TextField("Enter Action", text: $action).multilineTextAlignment(.trailing)
+							TextField("Enter Action", text: $action)
+								.multilineTextAlignment(.trailing)
+								.foregroundColor(.orange)
 						} else {
 							Spacer()
 							Text(action)
@@ -60,14 +97,14 @@ struct JourneyView: View {
 					}
 				}
 				Section(header: HStack {
-					Text("ACCIDENTS:")
+					Text("ACCIDENTS")
 					Spacer()
 					Button(action: { self.addingAccidentToJourney = self.journey },
 						   label: { Text("ADD") })
 				}) {
 					ForEach(fetchedResults.wrappedValue, id: \Accident.id) { accident in
 						HStack {
-							Text("\(accident.happenedAt)")
+							Text(self.dateTimeFormatter.string(from: accident.happenedAt))
 							if self.isEditing {
 								Spacer()
 								Button(action: {
@@ -75,6 +112,21 @@ struct JourneyView: View {
 									try! self.managedObjectContext.save()
 								}, label: { Image(systemName: "trash.fill") })
 							}
+						}
+					}
+				}
+				if self.isEditing {
+					Section {
+						HStack {
+							Spacer()
+							Button(action: {
+								self.presentationMode.wrappedValue.dismiss()
+								self.managedObjectContext.delete(self.journey)
+								try! self.managedObjectContext.save()
+							}, label: {
+								Text("Delete")
+							})
+							Spacer()
 						}
 					}
 				}
@@ -88,6 +140,7 @@ struct JourneyView: View {
 						self.since = self.journey.since
 						self.action = self.journey.action
 						self.isEditing.toggle()
+						self.showDatePicker = false
 					}, label: { Text("Cancel") })
 				}
 				}
