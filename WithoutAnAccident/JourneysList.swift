@@ -95,7 +95,7 @@ struct JourneysList: View {
 				JourneyView(isEditing: true, journey: journey)
 					.environment(\.managedObjectContext, self.managedObjectContext)
 			} else {
-				AccidentView(journey: journey)
+				AccidentView(journey: journey, acc: Acc(acc: nil))
 					.environment(\.managedObjectContext, self.managedObjectContext)
 			}
 		})

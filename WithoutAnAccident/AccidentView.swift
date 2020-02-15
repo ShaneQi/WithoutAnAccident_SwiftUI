@@ -9,6 +9,19 @@
 import SwiftUI
 import CoreData
 
+class Acc: ObservableObject {
+
+	var accident: Accident?
+
+	init(acc: Accident?) {
+		self.accident = acc
+		accident?.objectWillChange.sink(receiveValue: {
+			self.objectWillChange.send()
+		})
+	}
+
+}
+
 struct AccidentView: View {
 
 	@Environment(\.presentationMode) var presentationMode
@@ -16,6 +29,7 @@ struct AccidentView: View {
 
 	@State var happenedAt = Date()
 	@ObservedObject var journey: Journey
+	@ObservedObject var acc: Acc
 
 	private let dateTimeFormatter: DateFormatter = {
 		let formatter = DateFormatter()
@@ -41,10 +55,14 @@ struct AccidentView: View {
 						Text("Cancel")
 					}),
 					trailing: Button(action: {
-						let newAccident = NSEntityDescription.insertNewObject(forEntityName: "Accident", into: self.managedObjectContext) as! Accident
-						newAccident.id = UUID()
-						newAccident.happenedAt = self.happenedAt
-						self.journey.addAccident(newAccident)
+//						if let accident = self.acc.accident {
+//							accident.happenedAt = self.happenedAt
+//						} else {
+							let newAccident = NSEntityDescription.insertNewObject(forEntityName: "Accident", into: self.managedObjectContext) as! Accident
+							newAccident.id = UUID()
+							newAccident.happenedAt = self.happenedAt
+							self.journey.addAccident(newAccident)
+//						}
 						try! self.managedObjectContext.save()
 						self.presentationMode.wrappedValue.dismiss()
 					}, label: {
