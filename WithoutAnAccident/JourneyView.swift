@@ -10,7 +10,7 @@ import SwiftUI
 import CoreData
 
 struct JourneyView: View {
-	
+
 	@State var isEditing = false
 	@State var showDatePicker = false
 	@ObservedObject var journey: Journey
@@ -22,6 +22,7 @@ struct JourneyView: View {
 	@State var addingAccidentToJourney: Journey?
 	
 	let isInitiallyEditing: Bool?
+	@State var editingAccident: Accident?
 
 	@Environment(\.presentationMode) var presentationMode
 	@Environment(\.managedObjectContext) var managedObjectContext
@@ -99,20 +100,30 @@ struct JourneyView: View {
 				Section(header: HStack {
 					Text("ACCIDENTS")
 					Spacer()
-					Button(action: { self.addingAccidentToJourney = self.journey },
+					Button(action: {
+						self.editingAccident = nil
+						self.addingAccidentToJourney = self.journey
+
+					},
 						   label: { Text("ADD") })
 				}) {
 					ForEach(fetchedResults.wrappedValue, id: \Accident.id) { accident in
-						HStack {
-							Text(self.dateTimeFormatter.string(from: accident.happenedAt))
-							if self.isEditing {
-								Spacer()
-								Button(action: {
-									self.managedObjectContext.delete(accident)
-									try! self.managedObjectContext.save()
-								}, label: { Image(systemName: "trash.fill") })
+						Button(action: {
+							self.editingAccident = accident
+							self.addingAccidentToJourney = self.journey
+						}, label: {
+							HStack {
+								Text(self.dateTimeFormatter.string(from: accident.happenedAt))
+									.foregroundColor(.black)
+								if self.isEditing {
+									Spacer()
+									Button(action: {
+										self.managedObjectContext.delete(accident)
+										try! self.managedObjectContext.save()
+									}, label: { Image(systemName: "trash.fill") })
+								}
 							}
-						}
+						})
 					}
 				}
 				if self.isEditing {
@@ -157,8 +168,13 @@ struct JourneyView: View {
 					self.isEditing ? Text("Done") : Text("Edit")
 				}))
 				.sheet(item: $addingAccidentToJourney, content: { journey in
-					AccidentView(journey: journey)
-						.environment(\.managedObjectContext, self.managedObjectContext)
+					if self.editingAccident != nil {
+						AccidentView(journey: journey, acc: Acc(acc: self.editingAccident!))
+							.environment(\.managedObjectContext, self.managedObjectContext)
+					} else {
+						AccidentView(journey: journey, acc: Acc(acc: nil))
+							.environment(\.managedObjectContext, self.managedObjectContext)
+					}
 				})
 		}.onAppear {
 			if let isEditing = self.isInitiallyEditing {

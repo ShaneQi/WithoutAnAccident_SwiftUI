@@ -55,20 +55,24 @@ struct AccidentView: View {
 						Text("Cancel")
 					}),
 					trailing: Button(action: {
-//						if let accident = self.acc.accident {
-//							accident.happenedAt = self.happenedAt
-//						} else {
+						if let accident = self.acc.accident {
+							accident.happenedAt = self.happenedAt
+						} else {
 							let newAccident = NSEntityDescription.insertNewObject(forEntityName: "Accident", into: self.managedObjectContext) as! Accident
 							newAccident.id = UUID()
 							newAccident.happenedAt = self.happenedAt
 							self.journey.addAccident(newAccident)
-//						}
+						}
 						try! self.managedObjectContext.save()
 						self.presentationMode.wrappedValue.dismiss()
 					}, label: {
 						Text("Done")
 					}))
 
+		}.onAppear {
+			if let accident = self.acc.accident {
+				self.happenedAt = accident.happenedAt
+			}
 		}
 	}
 
