@@ -144,29 +144,30 @@ struct JourneyView: View {
 			}
 			.listStyle(GroupedListStyle())
 			.navigationBarTitle(Text(isEditing ? "Edit Journey" : title))
-			.navigationBarItems(leading: Group {
+			.navigationBarItems(leading: Button(action: {
+				UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 				if self.isEditing {
-					Button(action: {
-						self.title = self.journey.title
-						self.since = self.journey.since
-						self.action = self.journey.action
-						self.isEditing.toggle()
-						self.showDatePicker = false
-					}, label: { Text("Cancel") })
+					self.title = self.journey.title
+					self.since = self.journey.since
+					self.action = self.journey.action
 				}
-				}
-				,trailing: Button(action: {
-					UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+				self.isEditing.toggle()
+			}, label: {
+				self.isEditing ? Text("Cancel") : Text("Edit")
+			}),trailing: Group {
+				Button(action: {
 					if self.isEditing {
 						self.journey.title = self.title
 						self.journey.since = self.since
 						self.journey.action = self.action
 						try! self.managedObjectContext.save()
+						self.isEditing = false
+						self.showDatePicker = false
+					} else {
+						self.presentationMode.wrappedValue.dismiss()
 					}
-					self.isEditing.toggle()
-				}, label: {
-					self.isEditing ? Text("Done") : Text("Edit")
-				}))
+				}, label: { Text("Done") })
+			})
 				.sheet(item: $addingAccidentToJourney, content: { journey in
 					if self.editingAccident != nil {
 						AccidentView(journey: journey, editingAccident: self.editingAccident!)
