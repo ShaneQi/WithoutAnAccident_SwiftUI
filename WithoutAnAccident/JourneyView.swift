@@ -120,7 +120,7 @@ struct JourneyView: View {
 									Button(action: {
 										self.managedObjectContext.delete(accident)
 										try! self.managedObjectContext.save()
-									}, label: { Image(systemName: "trash.fill") })
+										}, label: { Image(systemName: "trash.fill") }).padding(8)
 								}
 							}
 						})
@@ -169,10 +169,10 @@ struct JourneyView: View {
 				}))
 				.sheet(item: $addingAccidentToJourney, content: { journey in
 					if self.editingAccident != nil {
-						AccidentView(journey: journey, acc: Acc(acc: self.editingAccident!))
+						AccidentView(journey: journey, editingAccident: self.editingAccident!)
 							.environment(\.managedObjectContext, self.managedObjectContext)
 					} else {
-						AccidentView(journey: journey, acc: Acc(acc: nil))
+						AccidentView(journey: journey, editingAccident: nil)
 							.environment(\.managedObjectContext, self.managedObjectContext)
 					}
 				})
