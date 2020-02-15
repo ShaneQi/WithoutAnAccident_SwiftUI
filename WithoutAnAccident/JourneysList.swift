@@ -50,21 +50,22 @@ struct JourneysList: View {
 					self.destination = .viewJourney
 				}, label: {
 					HStack(alignment: .center) {
-						if self.isEditing {
-							Button(action: {
-								self.managedObjectContext.delete(journey)
-								try! self.managedObjectContext.save()
-							}, label: { Image(systemName: "trash.fill") }).padding([.trailing], 8)
-						}
 						VStack(alignment: .leading) {
 							Text(journey.title).font(.title)
 							Text("\(self.daysWihtoutAnAccident(journey: journey)) days without an accident").font(.body).lineLimit(nil)
 						}
 						Spacer()
-						Button(action: {
-							self.selectedJourney = journey
-							self.destination = .addAccident
-						}, label: { Text(journey.action) })
+						if self.isEditing {
+							Button(action: {
+								self.managedObjectContext.delete(journey)
+								try! self.managedObjectContext.save()
+							}, label: { Image(systemName: "trash.fill") }).padding([.trailing], 8)
+						} else {
+							Button(action: {
+								self.selectedJourney = journey
+								self.destination = .addAccident
+							}, label: { Text(journey.action) })
+						}
 					}.padding(12)
 				})
 			}

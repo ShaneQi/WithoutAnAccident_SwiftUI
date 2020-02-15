@@ -27,14 +27,11 @@ struct AccidentView: View {
 	var body: some View {
 		NavigationView {
 			List {
-				HStack {
-					Text("Happened at:")
-					Spacer()
-					Text(dateTimeFormatter.string(from: happenedAt))
+				Section(header: Text("Happened at")) {
+					DatePicker(selection: $happenedAt, label: { Text("") })
+						.datePickerStyle(WheelDatePickerStyle())
+						.labelsHidden()
 				}
-				DatePicker(selection: $happenedAt, label: { Text("") })
-				.datePickerStyle(WheelDatePickerStyle())
-				.labelsHidden()
 			}.listStyle(GroupedListStyle())
 				.navigationBarTitle(Text("New Accident"))
 				.navigationBarItems(
