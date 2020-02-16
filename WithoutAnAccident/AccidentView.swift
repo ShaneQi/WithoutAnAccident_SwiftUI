@@ -9,19 +9,6 @@
 import SwiftUI
 import CoreData
 
-class Acc: ObservableObject {
-
-	var accident: Accident?
-
-	init(acc: Accident?) {
-		self.accident = acc
-		accident?.objectWillChange.sink(receiveValue: {
-			self.objectWillChange.send()
-		})
-	}
-
-}
-
 struct AccidentView: View {
 
 	@Environment(\.presentationMode) var presentationMode
@@ -29,7 +16,7 @@ struct AccidentView: View {
 
 	@State var happenedAt = Date()
 	@ObservedObject var journey: Journey
-	@ObservedObject var acc: Acc
+	@State var editingAccident: Accident?
 
 	private let dateTimeFormatter: DateFormatter = {
 		let formatter = DateFormatter()
@@ -47,7 +34,7 @@ struct AccidentView: View {
 						.labelsHidden()
 				}
 			}.listStyle(GroupedListStyle())
-				.navigationBarTitle(Text("New Accident"))
+				.navigationBarTitle(Text(self.editingAccident == nil ? "New Accident" : "Edit Accident"))
 				.navigationBarItems(
 					leading: Button(action: {
 						self.presentationMode.wrappedValue.dismiss()
@@ -55,20 +42,24 @@ struct AccidentView: View {
 						Text("Cancel")
 					}),
 					trailing: Button(action: {
-//						if let accident = self.acc.accident {
-//							accident.happenedAt = self.happenedAt
-//						} else {
+						if let accident = self.editingAccident {
+							accident.happenedAt = self.happenedAt
+						} else {
 							let newAccident = NSEntityDescription.insertNewObject(forEntityName: "Accident", into: self.managedObjectContext) as! Accident
 							newAccident.id = UUID()
 							newAccident.happenedAt = self.happenedAt
 							self.journey.addAccident(newAccident)
-//						}
+						}
 						try! self.managedObjectContext.save()
 						self.presentationMode.wrappedValue.dismiss()
 					}, label: {
 						Text("Done")
 					}))
 
+		}.onAppear {
+			if let accident = self.editingAccident {
+				self.happenedAt = accident.happenedAt
+			}
 		}
 	}
 

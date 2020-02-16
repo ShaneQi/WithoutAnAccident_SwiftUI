@@ -10,7 +10,7 @@ import SwiftUI
 import CoreData
 
 struct JourneyView: View {
-	
+
 	@State var isEditing = false
 	@State var showDatePicker = false
 	@ObservedObject var journey: Journey
@@ -22,6 +22,7 @@ struct JourneyView: View {
 	@State var addingAccidentToJourney: Journey?
 	
 	let isInitiallyEditing: Bool?
+	@State var editingAccident: Accident?
 
 	@Environment(\.presentationMode) var presentationMode
 	@Environment(\.managedObjectContext) var managedObjectContext
@@ -99,20 +100,30 @@ struct JourneyView: View {
 				Section(header: HStack {
 					Text("ACCIDENTS")
 					Spacer()
-					Button(action: { self.addingAccidentToJourney = self.journey },
+					Button(action: {
+						self.editingAccident = nil
+						self.addingAccidentToJourney = self.journey
+
+					},
 						   label: { Text("ADD") })
 				}) {
 					ForEach(fetchedResults.wrappedValue, id: \Accident.id) { accident in
-						HStack {
-							Text(self.dateTimeFormatter.string(from: accident.happenedAt))
-							if self.isEditing {
-								Spacer()
-								Button(action: {
-									self.managedObjectContext.delete(accident)
-									try! self.managedObjectContext.save()
-								}, label: { Image(systemName: "trash.fill") })
+						Button(action: {
+							self.editingAccident = accident
+							self.addingAccidentToJourney = self.journey
+						}, label: {
+							HStack {
+								Text(self.dateTimeFormatter.string(from: accident.happenedAt))
+									.foregroundColor(.black)
+								if self.isEditing {
+									Spacer()
+									Button(action: {
+										self.managedObjectContext.delete(accident)
+										try! self.managedObjectContext.save()
+										}, label: { Image(systemName: "trash.fill") }).padding(8)
+								}
 							}
-						}
+						})
 					}
 				}
 				if self.isEditing {
@@ -133,32 +144,38 @@ struct JourneyView: View {
 			}
 			.listStyle(GroupedListStyle())
 			.navigationBarTitle(Text(isEditing ? "Edit Journey" : title))
-			.navigationBarItems(leading: Group {
+			.navigationBarItems(leading: Button(action: {
+				UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 				if self.isEditing {
-					Button(action: {
-						self.title = self.journey.title
-						self.since = self.journey.since
-						self.action = self.journey.action
-						self.isEditing.toggle()
-						self.showDatePicker = false
-					}, label: { Text("Cancel") })
+					self.title = self.journey.title
+					self.since = self.journey.since
+					self.action = self.journey.action
 				}
-				}
-				,trailing: Button(action: {
-					UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+				self.isEditing.toggle()
+			}, label: {
+				self.isEditing ? Text("Cancel") : Text("Edit")
+			}),trailing: Group {
+				Button(action: {
 					if self.isEditing {
 						self.journey.title = self.title
 						self.journey.since = self.since
 						self.journey.action = self.action
 						try! self.managedObjectContext.save()
+						self.isEditing = false
+						self.showDatePicker = false
+					} else {
+						self.presentationMode.wrappedValue.dismiss()
 					}
-					self.isEditing.toggle()
-				}, label: {
-					self.isEditing ? Text("Done") : Text("Edit")
-				}))
+				}, label: { Text("Done") })
+			})
 				.sheet(item: $addingAccidentToJourney, content: { journey in
-					AccidentView(journey: journey)
-						.environment(\.managedObjectContext, self.managedObjectContext)
+					if self.editingAccident != nil {
+						AccidentView(journey: journey, editingAccident: self.editingAccident!)
+							.environment(\.managedObjectContext, self.managedObjectContext)
+					} else {
+						AccidentView(journey: journey, editingAccident: nil)
+							.environment(\.managedObjectContext, self.managedObjectContext)
+					}
 				})
 		}.onAppear {
 			if let isEditing = self.isInitiallyEditing {
