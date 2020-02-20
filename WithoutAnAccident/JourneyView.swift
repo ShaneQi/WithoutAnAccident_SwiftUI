@@ -68,7 +68,7 @@ struct JourneyView: View {
 							self.showDatePicker.toggle()
 						}, label: {
 							HStack{
-								Text("Start from").foregroundColor(.black)
+								Text("Start from").foregroundColor(Color("TextColor"))
 								Spacer()
 								Text(self.dateFormatter.string(from: since)).foregroundColor(.orange)
 							}
@@ -114,7 +114,7 @@ struct JourneyView: View {
 						}, label: {
 							HStack {
 								Text(self.dateTimeFormatter.string(from: accident.happenedAt))
-									.foregroundColor(.black)
+									.foregroundColor(Color("TextColor"))
 								if self.isEditing {
 									Spacer()
 									Button(action: {
